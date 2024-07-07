@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Command, Option } from 'commander';
 import ora from 'ora';
 import { loadConfig } from './utils/loadConfig.js';
