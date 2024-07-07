@@ -1,5 +1,5 @@
 import { lstat, readdir } from 'node:fs/promises';
-import { relative, resolve } from 'node:path';
+import { relative, resolve, join } from 'node:path';
 import type { Ora } from 'ora';
 import { TemplateModel } from './models/template.model.js';
 import { processTemplateFile } from './utils/processTemplateFile.js';
@@ -32,8 +32,6 @@ export async function processTemplate(
   ora?: Ora,
 ): Promise<void> {
   for (const template of templates) {
-    const baseOutputPath = resolve(basePath, template.outputPath);
-
     for (const path of template.sourcePaths) {
       ora?.start(path);
 
@@ -41,9 +39,9 @@ export async function processTemplate(
       const files = await listAllFiles(fullPath);
 
       for (const inputPath of files) {
-        const outputPath = relative(fullPath, inputPath);
+        const outputPath = join(template.outputPath, relative(fullPath, inputPath));
 
-        await processTemplateFile(template, variables, inputPath, baseOutputPath, outputPath, overwrite, ora);
+        await processTemplateFile(template, variables, inputPath, basePath, outputPath, overwrite, ora);
       }
     }
   }
