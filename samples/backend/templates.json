@@ -8,7 +8,8 @@
       "variables": [
         {
           "variable": "name",
-          "name": "Entity Name"
+          "name": "Entity Name",
+          "preprocessing": ["trim", "singular", "kebabCase"]
         }
       ]
     }

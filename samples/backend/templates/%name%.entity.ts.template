@@ -1,6 +1,6 @@
 
-@Entity('%name.plural.kebabCase%')
-class %name.singular.pascalCase%Entity {
+@Entity('%name.plural.snakeCase%')
+class %name.pascalCase%Entity {
 
   @Column()
   public id!: string;

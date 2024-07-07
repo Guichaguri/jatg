@@ -1,0 +1,17 @@
+
+@Injectable()
+class %name.pascalCase%Service {
+
+  constructor(private readonly repository: Repository<%name.pascalCase%Entity>) {}
+
+  @Get(':id')
+  public async getOne(@Param('id') id: string): Promise<%name.pascalCase%Entity> {
+    const entity = await this.repository.findOneBy({ id });
+
+    if (!entity)
+      throw new NotFoundException('The %name.capitalCase.lower% was not found');
+
+    return entity;
+  }
+
+}

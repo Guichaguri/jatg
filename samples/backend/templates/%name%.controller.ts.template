@@ -5,7 +5,7 @@ class %name.pascalCase%Controller {
   constructor(private readonly service: %name.pascalCase%Service) {}
 
   @Get(':id')
-  public async getOne(@Param('id') id: string): Promise<%name.singular.pascalCase%Entity> {
+  public async getOne(@Param('id') id: string): Promise<%name.pascalCase%Entity> {
     return await this.service.getOne(id);
   }
 

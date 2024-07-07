@@ -1,6 +1,6 @@
 {
   "name": "jatg",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Just Another Template Generator",
   "author": "Guilherme Chaguri",
   "license": "MIT",
@@ -17,9 +17,10 @@
     "templates.schema.json"
   ],
   "scripts": {
-    "start": "ts-node ./src/cli.ts",
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "start": "ts-node ./src/cli.ts",
+    "sample:backend": "npm run start -- --base-path ./samples/backend"
   },
   "dependencies": {
     "change-case": "^5.4.4",
