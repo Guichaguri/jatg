@@ -1,0 +1,11 @@
+
+@Entity('%name.plural.kebabCase%')
+class %name.singular.pascalCase%Entity {
+
+  @Column()
+  public id!: string;
+
+  @Column()
+  public name!: string;
+
+}

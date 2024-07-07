@@ -1,0 +1,12 @@
+
+@Controller('%name.plural.pathCase%')
+class %name.pascalCase%Controller {
+
+  constructor(private readonly service: %name.pascalCase%Service) {}
+
+  @Get(':id')
+  public async getOne(@Param('id') id: string): Promise<%name.singular.pascalCase%Entity> {
+    return await this.service.getOne(id);
+  }
+
+}

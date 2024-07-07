@@ -1,0 +1,27 @@
+{
+  "name": "jatg",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Guilherme Chaguri",
+  "license": "MIT",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "ts-node ./src/cli.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/pluralize": "^0.0.33",
+    "@types/prompts": "^2.4.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "change-case": "^5.4.4",
+    "commander": "^12.1.0",
+    "ora": "^8.0.1",
+    "pluralize": "^8.0.0",
+    "prompts": "^2.4.2"
+  }
+}

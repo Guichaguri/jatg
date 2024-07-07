@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Template Configuration",
+  "description": "Defines the list of templates and template composites that can be generated",
+  "type": "object",
+  "properties": {
+    "templates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The template name"
+          },
+          "sourcePaths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The path list of template files or directories containing templates"
+          },
+          "outputPath": {
+            "type": "string",
+            "description": "The output directory where the source paths will be copied into"
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "variable": {
+                  "type": "string",
+                  "description": "The variable identification"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "A human-readable name"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A human-readable description"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "text",
+                    "number"
+                  ],
+                  "description": "The variable type.\n\nThis is used for input validation."
+                },
+                "choices": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "A list of choices that the user can pick.\n\nIf this property defined, the user can only pick one of these options."
+                },
+                "initial": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "The initial value"
+                }
+              },
+              "required": [
+                "variable"
+              ],
+              "additionalProperties": false
+            },
+            "description": "The variables that the user can type.\n\nThese variables will be replaced in the final template"
+          }
+        },
+        "required": [
+          "name",
+          "sourcePaths",
+          "outputPath",
+          "variables"
+        ],
+        "additionalProperties": false
+      },
+      "description": "The list of templates that can be generated"
+    },
+    "composites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the composite"
+          },
+          "templates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The list of template names that will be combined"
+          }
+        },
+        "required": [
+          "name",
+          "templates"
+        ],
+        "additionalProperties": false
+      },
+      "description": "The list of templates that are a combination of multiple templates"
+    }
+  },
+  "required": [
+    "templates"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "../../docs/templates.schema.json",
+  "templates": [
+    {
+      "name": "module",
+      "sourcePaths": ["./templates"],
+      "outputPath": "./src/modules/%name.plural.kebabCase%",
+      "variables": [
+        {
+          "variable": "name",
+          "name": "Entity Name"
+        }
+      ]
+    }
+  ]
+}
