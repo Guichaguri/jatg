@@ -7,6 +7,7 @@ const operationFunctions: Record<VariableOperation, (value: string) => string> =
   upper: value => value.toUpperCase(),
   lower: value => value.toLowerCase(),
   trim: value => value.trim(),
+  unaccent: value => value.normalize("NFD").replace(/[\u0300-\u036f]/g, ''),
 
   // change-case functions
   camelCase: value => changeCase.camelCase(value),
@@ -21,7 +22,7 @@ const operationFunctions: Record<VariableOperation, (value: string) => string> =
   sentenceCase: value => changeCase.sentenceCase(value),
   snakeCase: value => changeCase.snakeCase(value),
   trainCase: value => changeCase.trainCase(value),
-  initials: value => changeCase.split(value).map(item => item[0]).join(''),
+  initials: value => changeCase.split(value).map(item => item[0]).join('').toUpperCase(),
 
   // pluralize functions
   plural: value => pluralize.plural(value),

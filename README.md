@@ -5,7 +5,7 @@ Low configuration CLI to generate files based on templates.
 ## Setting Up
 
 1. Create the `templates.json` configuration file
-2. Create your template files
+2. Create your template files (the filenames can end with .template, which will be removed from the generated file)
 3. Generate the files by running `jatg`
 
 ## Configuration
@@ -56,10 +56,12 @@ Variables can be used in template file contents, the template file name and the 
 
 These are based on the basic string functions included in JavaScript.
 
-| Function          | Result     |
-|-------------------|------------|
-| `upper`           | `TWOWORDS` |
-| `lower`           | `twowords` |
+| Function   | Before       | After      |
+|------------|--------------|------------|
+| `upper`    | "TwoWords"   | "TWOWORDS" |
+| `lower`    | "TwoWords"   | "twowords" |
+| `trim`     | " TwoWords " | "TwoWords" |
+| `unaccent` | "maçã"       | "maca"     |
 
 #### Change Case
 

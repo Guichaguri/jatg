@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "https://github.com/Guichaguri/jatg/raw/main/templates.schema.json",
   "title": "Template Configuration",
   "description": "Defines the list of templates and template composites that can be generated",
   "type": "object",
@@ -71,6 +72,7 @@
                       "upper",
                       "lower",
                       "trim",
+                      "unaccent",
                       "camelCase",
                       "capitalCase",
                       "constantCase",
