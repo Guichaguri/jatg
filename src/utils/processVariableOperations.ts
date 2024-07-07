@@ -1,7 +1,8 @@
 import * as changeCase from 'change-case';
 import pluralize from 'pluralize';
+import { VariableOperation } from '../models/template.model.js';
 
-const operationFunctions: Record<string, (value: string) => string> = {
+const operationFunctions: Record<VariableOperation, (value: string) => string> = {
   // Plain JS functions
   upper: value => value.toUpperCase(),
   lower: value => value.toLowerCase(),
@@ -27,7 +28,7 @@ const operationFunctions: Record<string, (value: string) => string> = {
   singular: value => pluralize.singular(value),
 };
 
-export function processVariableOperations(value: string, operations: string[]): string {
+export function processVariableOperations(value: string, operations: VariableOperation[]): string {
   if (operations.length === 0)
     return value;
 

@@ -1,4 +1,4 @@
-import { TemplateVariable } from '../models/template.model.js';
+import { TemplateVariable, VariableOperation } from '../models/template.model.js';
 import { processVariableOperations } from './processVariableOperations.js';
 
 function escapeRegExp(string: string): string {
@@ -9,10 +9,13 @@ export function replaceVariables(source: string, variables: TemplateVariable[], 
   for (const variable of variables) {
     const regex = new RegExp('%\\s?' + escapeRegExp(variable.variable) + '(\\.[a-zA-Z.]+)?\\s?%', 'g');
     const value = values.get(variable.variable) ?? '';
+    const globalOperations = variable.preprocessing || [];
 
-    source = source.replace(regex, (_, ops) =>
-      processVariableOperations(value, ops ? ops.substring(1).split('.') : [])
-    );
+    source = source.replace(regex, (_, ops) => {
+      const operations: VariableOperation[] = ops ? ops.substring(1).split('.') : [];
+
+      return processVariableOperations(value, [...globalOperations, ...operations]);
+    });
   }
 
   return source;

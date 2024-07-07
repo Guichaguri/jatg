@@ -87,4 +87,13 @@ export interface TemplateVariable {
    */
   initial?: string | number;
 
+  /**
+   * The list of formatting functions to apply globally for this variable
+   */
+  preprocessing?: VariableOperation[];
+
 }
+
+export type VariableOperation = 'upper' | 'lower' | 'trim' | 'camelCase' | 'capitalCase' | 'constantCase'
+  | 'dotCase' | 'kebabCase' | 'noCase' | 'pascalCase' | 'pascalSnakeCase' | 'pathCase' | 'sentenceCase'
+  | 'snakeCase' | 'trainCase' | 'initials' | 'plural' | 'singular';
