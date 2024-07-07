@@ -4,6 +4,10 @@
   "description": "Just Another Template Generator",
   "author": "Guilherme Chaguri",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Guichaguri/jatg.git"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,7 +18,8 @@
   ],
   "scripts": {
     "start": "ts-node ./src/cli.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "change-case": "^5.4.4",
