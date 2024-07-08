@@ -19,7 +19,11 @@ program
   .showHelpAfterError()
   .addOption(
     new Option('--init', 'creates the configuration file')
-      .default(false)
+  )
+  .addOption(
+    new Option('-b, --base-path [path]', 'base path')
+      .env('JATG_BASE_PATH')
+      .default('./')
   )
   .addOption(
     new Option('-c, --templates-config <path>', 'templates config file path')
@@ -30,13 +34,7 @@ program
     new Option('-t, --template [template]', 'template name')
   )
   .addOption(
-    new Option('-b, --base-path [path]', 'base path')
-      .env('JATG_BASE_PATH')
-      .default('./')
-  )
-  .addOption(
     new Option('-o, --overwrite', 'overwrite files')
-      .default(false)
   )
   .action((opts) => runCli(opts).catch(error => showError(error)));
 

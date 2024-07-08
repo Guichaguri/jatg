@@ -12,15 +12,20 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": "./dist/cli.js",
+  "man": [
+    "./man/jatg.1"
+  ],
   "files": [
     "dist/**/*",
+    "man/**/*",
     "templates.schema.json"
   ],
   "scripts": {
     "build": "tsc",
+    "build:man": "help2man --no-info -o ./man/jatg.1 jatg",
     "prepublishOnly": "npm run build",
-    "start": "ts-node ./src/cli.ts",
-    "sample:backend": "npm run start -- --base-path ./samples/backend"
+    "cli": "ts-node ./src/cli.ts",
+    "sample:backend": "npm run cli -- --base-path ./samples/backend"
   },
   "dependencies": {
     "change-case": "^5.4.4",
