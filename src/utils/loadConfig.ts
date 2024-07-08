@@ -9,6 +9,16 @@ export async function loadConfig(basePath: string, path: string): Promise<Templa
 
     return JSON.parse(rawConfig);
   } catch (error) {
-    throw new JatgError(`Couldn't open the config file ${path}`);
+    if (error instanceof SyntaxError) {
+      throw new JatgError(`The config file ${path} has invalid JSON: ${error.message}`);
+    }
+
+    const code = (error as NodeJS.ErrnoException).code;
+
+    if (code === 'ENOENT') {
+      throw new JatgError(`The config file ${path} does not exist. Create one with "jatg --init"`);
+    }
+
+    throw error;
   }
 }

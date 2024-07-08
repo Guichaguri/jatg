@@ -1,6 +1,7 @@
 import * as changeCase from 'change-case';
 import pluralize from 'pluralize';
 import { VariableOperation } from '../models/template.model.js';
+import { JatgError } from '../models/jatg-error.js';
 
 const operationFunctions: Record<VariableOperation, (value: string) => string> = {
   // Plain JS functions
@@ -29,13 +30,13 @@ const operationFunctions: Record<VariableOperation, (value: string) => string> =
   singular: value => pluralize.singular(value),
 };
 
-export function processVariableOperations(value: string, operations: VariableOperation[]): string {
+export function processVariableOperations(value: string, operations: VariableOperation[], context?: string): string {
   if (operations.length === 0)
     return value;
 
   for (const op of operations) {
     if (!operationFunctions[op])
-      throw new Error('Invalid operation ' + op);
+      throw new JatgError(`Invalid variable function "${op}" at ${context || 'unknown'}`);
 
     value = operationFunctions[op](value);
   }

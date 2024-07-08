@@ -7,6 +7,8 @@ import { pickTemplate } from './utils/pickTemplate.js';
 import { promptVariables } from './utils/promptVariables.js';
 import { processTemplate } from './processTemplate.js';
 import { initConfig } from './utils/initConfig.js';
+import { showError } from './utils/showError.js';
+import { JatgError } from './models/jatg-error.js';
 
 const program = new Command();
 
@@ -36,22 +38,19 @@ program
     new Option('-o, --overwrite', 'overwrite files')
       .default(false)
   )
-  .action((opts) => {
-    if (opts.init) {
-      initConfig(opts.templatesConfig, opts.basePath, opts.overwrite, opts.template)
-        .catch((error) => console.error(error?.toString()));
-
-      return;
-    }
-
-    runCli(opts.templatesConfig, opts.basePath, opts.overwrite, opts.template)
-      .then(() => console.log('Done.'))
-      .catch((error) => console.error(error?.toString()));
-  })
+  .action((opts) => runCli(opts).catch(error => showError(error)));
 
 program.parse();
 
-async function runCli(configPath: string, basePath: string, overwrite: boolean, templateName?: string): Promise<void> {
+async function runCli(opts: Record<string, any>): Promise<void> {
+  if (opts.init) {
+    await initConfig(opts.templatesConfig, opts.basePath, opts.overwrite, opts.template);
+  } else {
+    await generate(opts.templatesConfig, opts.basePath, opts.overwrite, opts.template);
+  }
+}
+
+async function generate(configPath: string, basePath: string, overwrite: boolean, templateName?: string): Promise<void> {
   const config = await loadConfig(basePath, configPath);
 
   const templates = config.templates || [];
@@ -60,7 +59,7 @@ async function runCli(configPath: string, basePath: string, overwrite: boolean, 
   const pickedTemplates = await pickTemplate(templates, composites, templateName);
 
   if (pickedTemplates.length === 0)
-    throw new Error(`No templates found for ${templateName}`);
+    throw new JatgError(`No templates found for "${templateName}"`);
 
   const variables = await promptVariables(pickedTemplates);
 
@@ -71,8 +70,6 @@ async function runCli(configPath: string, basePath: string, overwrite: boolean, 
 
     spinner?.succeed('Success!');
   } catch (error) {
-    spinner?.fail((error as Error)?.message || error?.toString() || 'Failed');
-
-    console.error(error);
+    showError(error, spinner);
   }
 }

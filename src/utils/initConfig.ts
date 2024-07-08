@@ -6,6 +6,7 @@ import { dirname, relative, resolve } from 'node:path';
 import { loadConfig } from './loadConfig.js';
 import { TemplateConfiguration, TemplateModel } from '../models/template.model.js';
 import { JatgError } from '../models/jatg-error.js';
+import { showError } from './showError.js';
 
 const initialConfig: TemplateConfiguration & { $schema: string } = {
   $schema: 'https://unpkg.com/jatg/templates.schema.json',
@@ -79,9 +80,6 @@ export async function initConfig(configPath: string, basePath: string, overwrite
 
     spinner.succeed('Saved at ' + relative('./', configFullPath));
   } catch (error) {
-    spinner.fail((error as Error)?.message || error?.toString() || 'Unknown error');
-
-    if (!(error instanceof JatgError))
-      console.error(error);
+    showError(error, spinner);
   }
 }

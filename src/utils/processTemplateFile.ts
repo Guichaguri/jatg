@@ -1,8 +1,9 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 import type { Ora } from 'ora';
 import { replaceVariables } from './replaceVariables.js';
 import { TemplateModel } from '../models/template.model.js';
+import { JatgError } from '../models/jatg-error.js';
 
 export async function processTemplateFile(
   template: TemplateModel,
@@ -16,23 +17,37 @@ export async function processTemplateFile(
   if (relativeOutputPath.toLowerCase().endsWith('.template'))
     relativeOutputPath = relativeOutputPath.substring(0, relativeOutputPath.length - '.template'.length);
 
-  relativeOutputPath = replaceVariables(relativeOutputPath, template.variables, variables);
+  relativeOutputPath = replaceVariables(relativeOutputPath, template.variables, variables, 'outputPath');
 
   ora?.start(relativeOutputPath);
 
   let contents = await readFile(inputPath, 'utf8');
 
-  contents = replaceVariables(contents, template.variables, variables);
+  contents = replaceVariables(contents, template.variables, variables, inputPath);
 
   const outputPath = join(baseOutputPath, relativeOutputPath);
 
-  await mkdir(dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, contents, {
-    flag: overwrite ? 'w' : 'wx',
-    encoding: 'utf8',
-  });
+  await saveFile(outputPath, contents, overwrite);
 
   ora?.succeed(relativeOutputPath);
 
   return outputPath;
+}
+
+async function saveFile(outputPath: string, contents: string, overwrite: boolean): Promise<void> {
+  try {
+    await mkdir(dirname(outputPath), { recursive: true });
+    await writeFile(outputPath, contents, {
+      flag: overwrite ? 'w' : 'wx',
+      encoding: 'utf8',
+    });
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException).code;
+
+    if (code === 'EEXIST') {
+      throw new JatgError(`The file "${relative('./', outputPath)}" already exists.`);
+    }
+
+    throw error;
+  }
 }
