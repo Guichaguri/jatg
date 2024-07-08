@@ -14,6 +14,7 @@ The configuration is a JSON file named `templates.json`. Here's an example:
 
 ```json
 {
+  "$schema": "https://unpkg.com/jatg/templates.schema.json",
   "templates": [
     {
       "name": "my-awesome-template",
@@ -26,8 +27,7 @@ The configuration is a JSON file named `templates.json`. Here's an example:
         }
       ]
     }
-  ],
-  "$schema": "node_modules/jatg/templates.schema.json"
+  ]
 }
 ```
 

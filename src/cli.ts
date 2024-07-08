@@ -6,17 +6,22 @@ import { loadConfig } from './utils/loadConfig.js';
 import { pickTemplate } from './utils/pickTemplate.js';
 import { promptVariables } from './utils/promptVariables.js';
 import { processTemplate } from './processTemplate.js';
+import { initConfig } from './utils/initConfig.js';
 
 const program = new Command();
 
 program
-  .name('another-template-generator')
+  .name('jatg')
   .description('Generate files from templates')
-  .version('1.0.0')
+  .version('0.0.3')
   .showHelpAfterError()
   .addOption(
+    new Option('--init', 'creates the configuration file')
+      .default(false)
+  )
+  .addOption(
     new Option('-c, --templates-config <path>', 'templates config file path')
-      .env('TEMPLATE_CONFIG_PATH')
+      .env('JATG_TEMPLATE_CONFIG_PATH')
       .default('./templates.json')
   )
   .addOption(
@@ -24,6 +29,7 @@ program
   )
   .addOption(
     new Option('-b, --base-path [path]', 'base path')
+      .env('JATG_BASE_PATH')
       .default('./')
   )
   .addOption(
@@ -31,6 +37,13 @@ program
       .default(false)
   )
   .action((opts) => {
+    if (opts.init) {
+      initConfig(opts.templatesConfig, opts.basePath, opts.overwrite, opts.template)
+        .catch((error) => console.error(error?.toString()));
+
+      return;
+    }
+
     runCli(opts.templatesConfig, opts.basePath, opts.overwrite, opts.template)
       .then(() => console.log('Done.'))
       .catch((error) => console.error(error?.toString()));

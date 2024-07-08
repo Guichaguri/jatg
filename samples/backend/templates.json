@@ -1,5 +1,5 @@
 {
-  "$schema": "https://github.com/Guichaguri/jatg/raw/main/templates.schema.json",
+  "$schema": "https://unpkg.com/jatg/templates.schema.json",
   "templates": [
     {
       "name": "module",
