@@ -1,17 +1,19 @@
-# JATG - Just Another Template Generator
+# jatg - just another template generator
 
-Low configuration CLI to generate files based on templates.
+jatg is a low configuration tool to generate files based on templates.
+
+Most template generation tools require elaborate configurations, lack intuitive usage, are tied to a specific framework or do not support variable transformations.
+The objective of this tool is to be as intuitive as possible while providing a flexible feature set.
+
+Simply create a template, add it to the configuration file and then run the CLI to generate files.
 
 ## Setting Up
 
-1. Create the `templates.json` configuration file
-2. Create your template files (the filenames can end with .template, which will be removed from the generated file)
-3. Generate the files by running `npx jatg`
+### Create the `templates.json`
 
-## Configuration
+You can create the file by running `npx jatg --init`, or just start by copying the example below:
 
-The configuration is a JSON file named `templates.json`. Here's an example:
-
+**templates.json**
 ```json
 {
   "$schema": "https://unpkg.com/jatg/templates.schema.json",
@@ -31,9 +33,39 @@ The configuration is a JSON file named `templates.json`. Here's an example:
 }
 ```
 
-Alternatively, you can run `npx jatg --init` to create one.
-
 The format of this file is documented through the [TemplateConfiguration TypeScript interface](https://github.com/Guichaguri/jatg/blob/main/src/models/template.model.ts) and the [JSON Schema](https://github.com/Guichaguri/jatg/blob/main/templates.schema.json). Refer them for a list of all possible properties.
+
+### Create your template files
+
+The file names don't need to follow any specific extension.
+If you prefer, you can end them with `.template`.
+The `.template` extension will be removed for the final file.
+
+You can have as many files as needed for a single template.
+
+**templates/%name%.ts**
+```
+export class %name.pascalCase% {
+  // ...
+}
+```
+
+The template can have variables they can be transformed through functions. Read more about them in the [variables section](#variables).
+
+### Run it
+
+Just run the CLI to generate files based on the templates created.
+
+You'll be prompted which template you want to generate, and the variable values.
+
+```sh
+npx jatg
+```
+
+Pretty straightforward, isn't it?
+
+---
+
 
 ## Variables
 
@@ -95,13 +127,35 @@ These functions use [pluralize](https://www.npmjs.com/package/pluralize) under t
 | `singular` | `twoWord`  |
 
 
-## Running
+## CLI
 
-Run the generation by simply running the command below.
+### Install
 
-```sh
-npx jatg
+#### npx
+
+You can run the generation through npx by simply running the command: `npx jatg`.
+
+#### Global
+
+You can also install globally through `npm install --global jatg` and run it directly through `jatg`.
+
+#### Project
+
+You can also install it as a dev dependency to your project through `npm install -D jatg` and add a script in your `package.json`:
+
+```json5
+{
+  // ...
+  "scripts": {
+    "generate": "jatg"
+  }
+  // ...
+}
 ```
+
+Then you can run it through `npm run generate`.
+
+### Options
 
 You can also specify options, such as picking a specific template:
 ```sh
