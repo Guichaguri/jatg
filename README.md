@@ -6,7 +6,7 @@ Low configuration CLI to generate files based on templates.
 
 1. Create the `templates.json` configuration file
 2. Create your template files (the filenames can end with .template, which will be removed from the generated file)
-3. Generate the files by running `jatg`
+3. Generate the files by running `npx jatg`
 
 ## Configuration
 
@@ -30,6 +30,8 @@ The configuration is a JSON file named `templates.json`. Here's an example:
   ]
 }
 ```
+
+Alternatively, you can run `npx jatg --init` to create one.
 
 The format of this file is documented through the [TemplateConfiguration TypeScript interface](https://github.com/Guichaguri/jatg/blob/main/src/models/template.model.ts) and the [JSON Schema](https://github.com/Guichaguri/jatg/blob/main/templates.schema.json). Refer them for a list of all possible properties.
 
@@ -98,12 +100,12 @@ These functions use [pluralize](https://www.npmjs.com/package/pluralize) under t
 Run the generation by simply running the command below.
 
 ```sh
-jatg
+npx jatg
 ```
 
 You can also specify options, such as picking a specific template:
 ```sh
-jatg --template my-awesome-template
+npx jatg --template my-awesome-template
 ```
 
 For a list of options, run `jatg --help`.

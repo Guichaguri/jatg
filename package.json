@@ -23,6 +23,7 @@
   "scripts": {
     "build": "tsc",
     "build:man": "help2man --no-info -o ./man/jatg.1 jatg",
+    "test": "vitest",
     "prepublishOnly": "npm run build",
     "cli": "ts-node ./src/cli.ts",
     "sample:backend": "npm run cli -- --base-path ./samples/backend"
@@ -38,6 +39,7 @@
     "@types/pluralize": "^0.0.33",
     "@types/prompts": "^2.4.9",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.1"
   }
 }
