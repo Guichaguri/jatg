@@ -9,7 +9,7 @@ class %name.pascalCase%Service {
     const entity = await this.repository.findOneBy({ id });
 
     if (!entity)
-      throw new NotFoundException('The %name.capitalCase.lower% was not found');
+      throw new NotFoundException('The %name.sentenceCase.lower% was not found');
 
     return entity;
   }
