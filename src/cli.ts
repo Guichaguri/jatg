@@ -15,7 +15,7 @@ const program = new Command();
 program
   .name('jatg')
   .description('Generate files from templates')
-  .version('1.0.0')
+  .version('1.0.1')
   .showHelpAfterError()
   .addOption(
     new Option('--init', 'creates the configuration file')
