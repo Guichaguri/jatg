@@ -42,7 +42,9 @@ export async function initConfig(configPath: string, basePath: string, overwrite
       message: 'Variable',
       initial: 'name',
     },
-  ]);
+  ], {
+    onCancel: () => { throw new JatgError('Operation canceled'); }
+  });
 
   const spinner = ora('Preparing...');
 
@@ -68,6 +70,9 @@ export async function initConfig(configPath: string, basePath: string, overwrite
 
     if (config.templates.some(t => t.name === template.name))
       throw new JatgError(`There's already a template named "${template.name}"`);
+
+    if (config.composites && config.composites.some(t => t.name === template.name))
+      throw new JatgError(`There's already a composite named "${template.name}"`);
 
     config.templates.push(template);
 
