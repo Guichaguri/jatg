@@ -1,5 +1,6 @@
 import prompts from 'prompts';
 import { TemplateModel } from '../models/template.model.js';
+import { JatgError } from '../models/jatg-error.js';
 
 export async function promptVariables(templates: TemplateModel[]): Promise<Map<string, string>> {
   const values = new Map<string, string>();
@@ -22,6 +23,8 @@ export async function promptVariables(templates: TemplateModel[]): Promise<Map<s
           title: choice,
         })) : undefined,
         initial: hasInvalidInitial ? undefined : variable.initial,
+      }, {
+        onCancel: () => { throw new JatgError('Generation canceled'); }
       });
 
       values.set(variable.variable, value.toString());

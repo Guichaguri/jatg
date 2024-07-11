@@ -7,7 +7,12 @@ export async function loadConfig(basePath: string, path: string): Promise<Templa
   try {
     const rawConfig = await readFile(resolve(basePath, path), 'utf8');
 
-    return JSON.parse(rawConfig);
+    const config: Partial<TemplateConfiguration> = JSON.parse(rawConfig);
+
+    return {
+      templates: [],
+      ...config,
+    };
   } catch (error) {
     if (error instanceof SyntaxError) {
       throw new JatgError(`The config file ${path} has invalid JSON: ${error.message}`);

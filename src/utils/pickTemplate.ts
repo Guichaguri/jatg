@@ -1,11 +1,15 @@
 import prompts from 'prompts';
 import { CompositeTemplateModel, TemplateModel } from '../models/template.model.js';
+import { JatgError } from '../models/jatg-error.js';
 
 async function promptTemplate(templates: TemplateModel[], composites: CompositeTemplateModel[]): Promise<string> {
   const names = new Set([
     ...composites.map(c => c.name),
     ...templates.map(t => t.name),
   ]);
+
+  if (names.size === 0)
+    throw new JatgError('No templates registered. Initialize one with "jatg --init"');
 
   const { template } = await prompts({
     name: 'template',
@@ -15,6 +19,8 @@ async function promptTemplate(templates: TemplateModel[], composites: CompositeT
       value: name,
       title: name,
     })),
+  }, {
+    onCancel: () => { throw new JatgError('Generation canceled'); }
   });
 
   return template;
@@ -31,7 +37,7 @@ function findTemplatesByName(templates: TemplateModel[], composites: CompositeTe
   if (singleTemplate)
     return [singleTemplate];
 
-  return [];
+  throw new JatgError(`Template "${template}" was not found`);
 }
 
 export async function pickTemplate(templates: TemplateModel[], composites: CompositeTemplateModel[], template?: string): Promise<TemplateModel[]> {
