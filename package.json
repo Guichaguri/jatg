@@ -4,6 +4,10 @@
   "description": "Just Another Template Generator",
   "author": "Guilherme Chaguri",
   "license": "MIT",
+  "keywords": [
+    "template",
+    "template-generator"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Guichaguri/jatg.git"
