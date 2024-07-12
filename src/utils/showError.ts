@@ -1,18 +1,19 @@
-import type { Ora } from 'ora';
+import ora, { Ora } from 'ora';
 import { JatgError } from '../models/jatg-error.js';
 
-export function showError(error: unknown, ora?: Ora): void {
+export function showError(error: unknown, spinner?: Ora): void {
   const message: string = (error as Error)?.message || error?.toString() || 'Internal Error';
   const shouldShowDetails = !(error instanceof JatgError);
 
-  if (ora && ora.isSpinning) {
-    ora.fail(message);
+  if (spinner && spinner.isSpinning) {
+    spinner.fail(message);
   } else {
-    console.error(message);
+    ora(message).fail(message);
   }
 
+  console.log();
+
   if (shouldShowDetails) {
-    console.log();
     console.error(error);
   }
 }
