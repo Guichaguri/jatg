@@ -88,6 +88,11 @@ export interface TemplateVariable {
   initial?: string | number;
 
   /**
+   * Whether this variable allows empty values
+   */
+  allowEmpty?: boolean;
+
+  /**
    * The list of formatting functions to apply globally for this variable
    */
   preprocessing?: VariableOperation[];

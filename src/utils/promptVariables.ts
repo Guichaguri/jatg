@@ -23,6 +23,7 @@ export async function promptVariables(templates: TemplateModel[]): Promise<Map<s
           title: choice,
         })) : undefined,
         initial: hasInvalidInitial ? undefined : variable.initial,
+        validate: value => !variable.allowEmpty && typeof value === 'string' && !value ? 'The value cannot be empty' : true,
       }, {
         onCancel: () => { throw new JatgError('Generation canceled'); }
       });

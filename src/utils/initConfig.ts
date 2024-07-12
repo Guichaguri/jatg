@@ -23,24 +23,28 @@ export async function initConfig(configPath: string, basePath: string, overwrite
       type: 'text',
       message: 'Template Name',
       initial: template || 'my-cool-template',
+      validate: value => !value ? 'The name cannot be empty' : true,
     },
     {
       name: 'sourcePath',
       type: 'text',
       message: 'Template Path',
       initial: './templates',
+      validate: value => !value ? 'The path cannot be empty' : true,
     },
     {
       name: 'outputPath',
       type: 'text',
       message: 'Output Path',
       initial: './src',
+      validate: value => !value ? 'The path cannot be empty' : true,
     },
     {
       name: 'variable',
       type: 'text',
       message: 'Variable',
       initial: 'name',
+      validate: value => !value ? 'The variable name cannot be empty' : true,
     },
   ], {
     onCancel: () => { throw new JatgError('Operation canceled'); }

@@ -64,6 +64,10 @@
                   ],
                   "description": "The initial value"
                 },
+                "allowEmpty": {
+                  "type": "boolean",
+                  "description": "Whether this variable allows empty values"
+                },
                 "preprocessing": {
                   "type": "array",
                   "items": {
