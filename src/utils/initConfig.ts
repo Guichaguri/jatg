@@ -1,5 +1,6 @@
 import prompts from 'prompts';
 import ora from 'ora';
+import chalk from 'chalk';
 import { capitalCase } from 'change-case';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
@@ -14,50 +15,77 @@ const initialConfig: TemplateConfiguration & { $schema: string } = {
 };
 
 export async function initConfig(configPath: string, basePath: string, overwrite?: boolean, template?: string): Promise<void> {
-  console.log('jatg - create a new template wizard');
+  console.log(chalk.magentaBright('jatg') + ' - create a new template wizard');
   console.log();
 
-  const { name, sourcePath, outputPath, variable } = await prompts([
-    {
-      name: 'name',
-      type: 'text',
-      message: 'Template Name',
-      initial: template || 'my-cool-template',
-      validate: value => !value ? 'The name cannot be empty' : true,
-    },
-    {
-      name: 'sourcePath',
-      type: 'text',
-      message: 'Template Path',
-      initial: './templates',
-      validate: value => !value ? 'The path cannot be empty' : true,
-    },
-    {
-      name: 'outputPath',
-      type: 'text',
-      message: 'Output Path',
-      initial: './src',
-      validate: value => !value ? 'The path cannot be empty' : true,
-    },
-    {
-      name: 'variable',
-      type: 'text',
-      message: 'Variable',
-      initial: 'name',
-      validate: value => !value ? 'The variable name cannot be empty' : true,
-    },
-  ], {
+  let config: TemplateConfiguration = { ...initialConfig };
+
+  if (!overwrite)
+    config = await loadConfig(basePath, configPath).catch(() => config);
+
+  console.log(chalk.yellow('What name best describes the template?'));
+
+  const { name } = await prompts({
+    name: 'name',
+    type: 'text',
+    message: 'Template Name',
+    initial: template || 'my-cool-template',
+    validate: value => !value ? 'The name cannot be empty' : true,
+  }, {
     onCancel: () => { throw new JatgError('Operation canceled'); }
   });
+
+  if (config.templates.some(t => t.name === name))
+    throw new JatgError(`There's already a template named "${name}"`);
+
+  if (config.composites && config.composites.some(t => t.name === name))
+    throw new JatgError(`There's already a composite named "${name}"`);
+
+  console.log();
+  console.log(chalk.yellow('What is the variable name that you want to use in your template files?'));
+  console.log(chalk.yellow(`Leave empty if you don't want to define a variable.`));
+
+  const { variable } = await prompts({
+    name: 'variable',
+    type: 'text',
+    message: 'Variable',
+  }, {
+    onCancel: () => { throw new JatgError('Operation canceled'); }
+  });
+
+  console.log();
+  console.log(chalk.yellow('Choose a path where the template files will be located.'));
+  console.log(chalk.yellow('This can be the path to a specific template file or to a directory containing template files.'));
+
+  const { sourcePath } = await prompts({
+    name: 'sourcePath',
+    type: 'text',
+    message: 'Template Path',
+    initial: './templates',
+    validate: value => !value ? 'The path cannot be empty' : true,
+  }, {
+    onCancel: () => { throw new JatgError('Operation canceled'); }
+  });
+
+  console.log();
+  console.log(chalk.yellow('Now, choose a directory that the files should be generated into.'));
+  console.log(chalk.yellow('This path can also contain variables.'));
+
+  const { outputPath } = await prompts({
+    name: 'outputPath',
+    type: 'text',
+    message: 'Output Path',
+    initial: './src',
+    validate: value => !value ? 'The path cannot be empty' : true,
+  }, {
+    onCancel: () => { throw new JatgError('Operation canceled'); }
+  });
+
+  console.log();
 
   const spinner = ora('Preparing...');
 
   try {
-    let config: TemplateConfiguration = { ...initialConfig };
-
-    if (!overwrite)
-      config = await loadConfig(basePath, configPath).catch(() => config);
-
     const template: TemplateModel = {
       name: name.toString(),
       sourcePaths: [sourcePath.toString()],
@@ -72,12 +100,6 @@ export async function initConfig(configPath: string, basePath: string, overwrite
       });
     }
 
-    if (config.templates.some(t => t.name === template.name))
-      throw new JatgError(`There's already a template named "${template.name}"`);
-
-    if (config.composites && config.composites.some(t => t.name === template.name))
-      throw new JatgError(`There's already a composite named "${template.name}"`);
-
     config.templates.push(template);
 
     spinner.start('Saving...');
@@ -88,6 +110,20 @@ export async function initConfig(configPath: string, basePath: string, overwrite
     await writeFile(configFullPath, JSON.stringify(config, null, 2));
 
     spinner.succeed('Saved at ' + relative('./', configFullPath));
+
+    console.log();
+    console.log(chalk.cyanBright(`Now, you can create a template file containing everything you need to be automatically generated.`));
+
+    if (variable)
+      console.log(chalk.cyanBright(`The variable should be formatted as `) + chalk.cyan(`%${ variable.toString().trim() }%`));
+
+    console.log();
+    console.log(chalk.cyanBright('Once the template is ready, you can generate files by running ') + chalk.cyan('jatg'));
+    console.log();
+    console.log(chalk.cyanBright('You can also change or extend these settings anytime by editting ') + chalk.cyan(relative('./', configFullPath)));
+    console.log();
+    console.log(chalk.gray('Run this command again to generate another template'));
+    console.log();
   } catch (error) {
     showError(error, spinner);
   }

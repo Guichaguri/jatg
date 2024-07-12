@@ -1,4 +1,5 @@
-import ora, { Ora } from 'ora';
+import type { Ora } from 'ora';
+import chalk from 'chalk';
 import { JatgError } from '../models/jatg-error.js';
 
 export function showError(error: unknown, spinner?: Ora): void {
@@ -8,7 +9,7 @@ export function showError(error: unknown, spinner?: Ora): void {
   if (spinner && spinner.isSpinning) {
     spinner.fail(message);
   } else {
-    ora(message).fail(message);
+    console.error(chalk.red(message));
   }
 
   console.log();

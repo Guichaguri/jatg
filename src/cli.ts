@@ -67,6 +67,7 @@ async function generate(configPath: string, basePath: string, overwrite: boolean
     await processTemplate(pickedTemplates, variables, overwrite, basePath, spinner);
 
     spinner?.succeed('Success!');
+    console.log();
   } catch (error) {
     showError(error, spinner);
   }
