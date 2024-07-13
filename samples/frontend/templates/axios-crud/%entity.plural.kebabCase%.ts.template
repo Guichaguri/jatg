@@ -1,0 +1,31 @@
+export interface %entity%Proxy {
+  id: string;
+}
+
+export async function get%entity.plural%(): Promise<%entity%Proxy[]> {
+  const { data } = await axios.get<%entity%Proxy[]>('%path%');
+
+  return data;
+}
+
+export async function get%entity%(id: string): Promise<%entity%Proxy> {
+  const { data } = await axios.get<%entity%Proxy>('%path%/' + encodeURIComponent(id));
+
+  return data;
+}
+
+export async function create%entity%(payload: Partial<%entity%Proxy>): Promise<%entity%Proxy> {
+  const { data } = await axios.post<%entity%Proxy>('%path%', payload);
+
+  return data;
+}
+
+export async function update%entity%(id: string, payload: Partial<%entity%Proxy>): Promise<%entity%Proxy> {
+  const { data } = await axios.put<%entity%Proxy>('%path%/' + encodeURIComponent(id), payload);
+
+  return data;
+}
+
+export async function delete%entity%(id: string): Promise<void> {
+  await axios.delete<%entity%Proxy>('%path%/' + encodeURIComponent(id));
+}

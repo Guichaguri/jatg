@@ -1,0 +1,26 @@
+
+export async function loader({ request }) {
+
+}
+
+export async function action({ request }) {
+  const form = await request.formData();
+
+}
+
+export default function %name.pascalCase%() {
+  const data = useLoaderData();
+  const { state } = useNavigation();
+
+  return (
+    <div>
+      <h1>%name.capitalCase%</h1>
+      <Form method="post">
+
+        <button type="submit" disabled={busy}>
+          {busy ? "Creating..." : "Create %name.singular.sentenceCase%"}
+        </button>
+      </Form>
+    </div>
+  );
+}

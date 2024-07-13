@@ -30,7 +30,8 @@
     "test": "vitest",
     "prepublishOnly": "npm run build",
     "cli": "ts-node ./src/cli.ts",
-    "sample:backend": "npm run cli -- --base-path ./samples/backend"
+    "sample:backend": "npm run cli -- --base-path ./samples/backend",
+    "sample:frontend": "npm run cli -- --base-path ./samples/frontend"
   },
   "dependencies": {
     "chalk": "^5.3.0",

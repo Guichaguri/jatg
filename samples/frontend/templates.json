@@ -1,0 +1,33 @@
+{
+  "$schema": "https://unpkg.com/jatg/templates.schema.json",
+  "templates": [
+    {
+      "name": "remix-route",
+      "sourcePaths": ["./templates/remix"],
+      "outputPath": "./app/routes",
+      "variables": [
+        {
+          "variable": "name",
+          "name": "Page Name",
+          "preprocessing": ["trim"]
+        }
+      ]
+    },
+    {
+      "name": "axios-crud",
+      "sourcePaths": ["./templates/axios-crud"],
+      "outputPath": "./app/data",
+      "variables": [
+        {
+          "variable": "entity",
+          "name": "Entity Name",
+          "preprocessing": ["trim", "singular", "pascalCase"]
+        },
+        {
+          "variable": "path",
+          "name": "API Resource Path"
+        }
+      ]
+    }
+  ]
+}
