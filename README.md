@@ -5,7 +5,7 @@ jatg is a low configuration tool to generate files based on templates.
 Most template generation tools require elaborate configurations, lack intuitive usage, are tied to a specific framework or do not support variable transformations.
 The objective of this tool is to be as intuitive as possible while providing a flexible feature set.
 
-Simply create a template, add it to the configuration file and then run the CLI to generate files.
+Simply create your template files, add them to the configuration file and then run `jatg` to generate the resulting files.
 
 ## Setting Up
 
@@ -37,10 +37,6 @@ The format of this file is documented through the [TemplateConfiguration TypeScr
 
 ### Create your template files
 
-The file names don't need to follow any specific extension.
-If you prefer, you can end them with `.template`.
-The `.template` extension will be removed for the final file.
-
 You can have as many files as needed for a single template.
 
 **templates/%name%.ts**
@@ -50,13 +46,13 @@ export class %name.pascalCase% {
 }
 ```
 
-The template can have variables they can be transformed through functions. Read more about them in the [variables section](#variables).
+The template can have variables and they can be transformed through functions. Read more about them in the [variables section](#variables).
 
 ### Run it
 
 Just run the CLI to generate files based on the templates created.
 
-You'll be prompted which template you want to generate, and the variable values.
+You'll be prompted which template you want to generate, and what are the variable values.
 
 ```sh
 npx jatg
@@ -66,8 +62,9 @@ Pretty straightforward, isn't it?
 
 ---
 
+## Reference
 
-## Variables
+### Variables
 
 A template can have multiple variables. Those can be defined in the configuration and can be used to make template contents and file names dynamic.
 
@@ -84,9 +81,11 @@ For the variable named `entity` and the value `user-post`, here are a few exampl
 
 Variables can be used in template file contents, the template file name and the configuration `outputPath`.
 
-### Formatting Functions
+Variables that are not defined in the configuration file will be ignored and kept as-is. However, valid variables with invalid formatting functions will throw an error.
 
-#### Basic
+#### Formatting Functions
+
+##### Basic
 
 These are based on the basic string functions included in JavaScript.
 
@@ -97,7 +96,7 @@ These are based on the basic string functions included in JavaScript.
 | `trim`     | " TwoWords " | "TwoWords" |
 | `unaccent` | "maçã"       | "maca"     |
 
-#### Change Case
+##### Change Case
 
 These functions use [change-case](https://www.npmjs.com/package/change-case) under the hood.
 
@@ -117,7 +116,7 @@ These functions use [change-case](https://www.npmjs.com/package/change-case) und
 | `trainCase`       | `Two-Words` |
 | `initials`        | `TW`        |
 
-#### Pluralize
+##### Pluralize
 
 These functions use [pluralize](https://www.npmjs.com/package/pluralize) under the hood.
 
@@ -127,19 +126,70 @@ These functions use [pluralize](https://www.npmjs.com/package/pluralize) under t
 | `singular` | `twoWord`  |
 
 
-## CLI
+### Template files
 
-### Install
+#### File names and directories
 
-#### npx
+The `sourcePaths` can contain paths to template files and directories containing templates.
+
+For directories, all files inside it will be considered templates.
+The directory structure will be kept for the generated results.
+
+The file names don't need to follow any specific extension.
+If you prefer, you can end them with `.template`.
+The `.template` extension will be removed for the resulting file.
+
+The file names, directories and the `outputPath` can contain [variables](#variables).
+
+Here's an example of the folder structure:
+```
+templates/
+├── entities/
+│   └── %name%.entity.ts.template
+└── models/
+    └── %name%.model.ts.template
+```
+
+The templates.json file:
+```json5
+// templates.json
+{
+  // ...
+  "sourcePaths": ["./templates"],
+  "outputPath": "./src/modules/%name%",
+  // ...
+}
+```
+
+The resulting files for the variable `name` being "product":
+```
+src/
+└── modules/
+    └── product/
+        ├── entities/
+        │   └── product.entity.ts
+        └── models/
+            └── product.model.ts
+```
+
+#### Template file contents
+
+Template files must be in plain text encoded in UTF-8.
+The files can contain as many [variables](#variables) as needed.
+
+### CLI
+
+#### Install
+
+##### npx
 
 You can run the generation through npx by simply running the command: `npx jatg`.
 
-#### Global
+##### Global
 
 You can also install globally through `npm install --global jatg` and run it directly through `jatg`.
 
-#### Project
+##### Project
 
 You can also install it as a dev dependency to your project through `npm install -D jatg` and add a script in your `package.json`:
 
@@ -155,7 +205,7 @@ You can also install it as a dev dependency to your project through `npm install
 
 Then you can run it through `npm run generate`.
 
-### Options
+#### Options
 
 You can also specify options, such as picking a specific template:
 ```sh
