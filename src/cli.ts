@@ -32,6 +32,7 @@ program
   )
   .addOption(
     new Option('-t, --template [template]', 'template name')
+      .env('JATG_TEMPLATE_NAME')
   )
   .addOption(
     new Option('-o, --overwrite', 'overwrite files')
