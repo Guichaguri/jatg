@@ -29,5 +29,11 @@
         }
       ]
     }
+  ],
+  "composites": [
+    {
+      "name": "crud-page",
+      "templates": ["remix-route", "axios-crud"]
+    }
   ]
 }

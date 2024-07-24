@@ -46,7 +46,7 @@ export class %name.pascalCase% {
 }
 ```
 
-The template can have variables and they can be transformed through functions. Read more about them in the [variables section](#variables).
+The template can have variables, and they can be transformed through functions. Read more about them in the [variables section](#variables).
 
 ### Run it
 
