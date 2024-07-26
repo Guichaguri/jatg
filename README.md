@@ -33,7 +33,7 @@ You can create the file by running `npx jatg --init`, or just start by copying t
 }
 ```
 
-The format of this file is documented through the [TemplateConfiguration TypeScript interface](https://github.com/Guichaguri/jatg/blob/main/src/models/template.model.ts) and the [JSON Schema](https://github.com/Guichaguri/jatg/blob/main/templates.schema.json). Refer them for a list of all possible properties.
+Read the [configuration reference](#configuration) for a list of all possible properties.
 
 ### Create your template files
 
@@ -46,7 +46,7 @@ export class %name.pascalCase% {
 }
 ```
 
-The template can have variables, and they can be transformed through functions. Read more about them in the [variables section](#variables).
+The template can have variables, and they can be transformed through functions. Read more about them in the [variables reference](#variables).
 
 ### Run it
 
@@ -74,7 +74,7 @@ For the variable named `entity` and the value `user-post`, here are a few exampl
 
 | Template                        | Result       | What is hapenning?                                                          |
 |---------------------------------|--------------|-----------------------------------------------------------------------------|
-| `%entity%`                      | `user-post`  | prints the variable value as is                                             |
+| `%entity%`                      | `user-post`  | prints the variable value as-is                                             |
 | `%entity.upper%`                | `USER-POST`  | prints the variable formatted value in uppercase                            |
 | `%entity.plural.upper%`         | `USER-POSTS` | prints the variable value formatted in plural and in uppercase              |
 | `%entity.plural.dotCase.upper%` | `USER.POSTS` | prints the variable value formatted in plural, in dot case and in uppercase |
@@ -130,13 +130,13 @@ These functions use [pluralize](https://www.npmjs.com/package/pluralize) under t
 
 #### File names and directories
 
-The `sourcePaths` can contain paths to template files and directories containing templates.
+The `sourcePaths` is a list of paths to template files and directories that contain template files.
 
 For directories, all files inside it will be considered templates.
 The directory structure will be kept for the generated results.
 
 The file names don't need to follow any specific extension.
-If you prefer, you can end them with `.template`.
+If you need to, you can end them with `.template`.
 The `.template` extension will be removed for the resulting file.
 
 The file names, directories and the `outputPath` can contain [variables](#variables).
@@ -150,7 +150,7 @@ templates/
     └── %name%.model.ts.template
 ```
 
-The templates.json file:
+The [templates.json](#configuration) file:
 ```json5
 // templates.json
 {
@@ -176,6 +176,48 @@ src/
 
 Template files must be in plain text encoded in UTF-8.
 The files can contain as many [variables](#variables) as needed.
+
+
+### Configuration
+
+The format of the `template.json` file is also documented through the [TemplateConfiguration TypeScript interface](https://github.com/Guichaguri/jatg/blob/main/src/models/template.model.ts) and the [JSON Schema](https://github.com/Guichaguri/jatg/blob/main/templates.schema.json).
+
+#### Root
+
+| Property     | Type                                                  | Required | Description                                                        |
+|--------------|-------------------------------------------------------|----------|--------------------------------------------------------------------|
+| `templates`  | array\<[Template Definition](#template-definition)>   | Required | The list of templates that can be generated                        |
+| `composites` | array\<[Composite Definition](#composite-definition)> |          | The list of templates that are a combination of multiple templates |
+
+#### Template Definition
+
+| Property      | Type                                                | Required | Description                                                                                      |
+|---------------|-----------------------------------------------------|----------|--------------------------------------------------------------------------------------------------|
+| `name`        | string                                              | Required | The template name                                                                                |
+| `sourcePaths` | array\<string>                                      | Required | The path list of template files or directories containing templates                              |
+| `outputPath`  | string                                              | Required | The output directory where the source paths will be copied into. The path can contain variables. |
+| `variables`   | array\<[Variable Definition](#variable-definition)> | Required | The variables that the user can type. These variables will be replaced in the final template     |
+
+#### Variable Definition
+
+| Property        | Type                   | Required | Description                                                                                                      |
+|-----------------|------------------------|----------|------------------------------------------------------------------------------------------------------------------|
+| `variable`      | string                 | Required | The variable identification                                                                                      |
+| `name`          | string                 |          | A human-redable name                                                                                             |
+| `description`   | string                 |          | A human-redable description                                                                                      |
+| `type`          | `"text"` \| `"number"` |          | The variable type. This is used for input validation. Defaults to `"text"`.                                      |
+| `choices`       | array\<string>         |          | A list of choices that the user can pick. If this property defined, the user can only pick one of these options. |
+| `initial`       | string \| number       |          | The initial value                                                                                                |
+| `allowEmpty`    | boolean                |          | Whether this variable allows empty values. Defaults to `false`.                                                  |
+| `preprocessing` | array\<string>         |          | The list of [formatting functions](#formatting-functions) to apply globally for this variable.                   |
+
+#### Composite Definition
+
+| Property    | Type           | Required | Description                                      |
+|-------------|----------------|----------|--------------------------------------------------|
+| `name`      | string         | Required | The name of the composite                        |
+| `templates` | array\<string> | Required | The list of template names that will be combined |
+
 
 ### CLI
 
