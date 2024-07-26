@@ -19,16 +19,23 @@ export async function promptVariables(templates: TemplateModel[]): Promise<Map<s
   return values;
 }
 
+function validateValue(variable: TemplateVariable, value: string | number | undefined | null): string | true {
+  if (!variable.allowEmpty && typeof value === 'string' && !value)
+    return 'The value cannot be empty';
+
+  if (value && variable.choices && variable.choices.length > 0 && !variable.choices.includes(value.toString()))
+    return 'The value must be a valid option';
+
+  return true;
+}
+
 async function promptVariable(variable: TemplateVariable): Promise<string> {
-  const hasChoices = variable.choices && variable.choices.length > 0;
-
   const envValue = process.env['JATG_VARIABLE_' + variable.variable.toUpperCase()];
-  const hasInvalidEnv = hasChoices && envValue && !variable.choices?.includes(envValue);
 
-  if (envValue && !hasInvalidEnv)
+  if (envValue && validateValue(variable, envValue) === true)
     return envValue;
 
-  const hasInvalidInitial = hasChoices && variable.initial && !variable.choices?.includes(variable.initial.toString());
+  const hasChoices = variable.choices && variable.choices.length > 0;
 
   const { value } = await prompts({
     name: 'value',
@@ -39,8 +46,8 @@ async function promptVariable(variable: TemplateVariable): Promise<string> {
       value: choice,
       title: choice,
     })) : undefined,
-    initial: hasInvalidInitial ? undefined : variable.initial,
-    validate: value => !variable.allowEmpty && typeof value === 'string' && !value ? 'The value cannot be empty' : true,
+    initial: validateValue(variable, variable.initial) === true ? variable.initial : undefined,
+    validate: value => validateValue(variable, value),
   }, {
     onCancel: () => { throw new JatgError('Generation canceled'); }
   });
