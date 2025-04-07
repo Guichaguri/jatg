@@ -1,6 +1,6 @@
 import { expect, assert, test } from 'vitest';
 import { processVariableOperations } from '../../src/utils/processVariableOperations.js';
-import { JatgError } from '../../src/models/jatg-error';
+import { JatgError } from '../../src/models/jatg-error.js';
 
 test('zero function', () => {
   expect(processVariableOperations('Something', [])).toStrictEqual('Something');
@@ -29,4 +29,12 @@ test('invalid functions', () => {
   assert.throws(() => processVariableOperations('something', ['invalid' as any]), JatgError);
   assert.throws(() => processVariableOperations('something', ['UPPER' as any]), JatgError);
   assert.throws(() => processVariableOperations('something', ['camelcase' as any]), JatgError);
+});
+
+test('all valid functions', () => {
+  processVariableOperations('sample', [
+    'upper', 'lower', 'trim', 'unaccent', 'camelCase', 'capitalCase',
+    'constantCase', 'dotCase', 'kebabCase', 'noCase', 'pascalCase', 'pascalSnakeCase', 'pathCase',
+    'sentenceCase', 'snakeCase', 'trainCase', 'initials', 'plural', 'singular',
+  ]);
 });

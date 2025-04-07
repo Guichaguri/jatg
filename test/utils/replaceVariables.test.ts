@@ -6,6 +6,7 @@ const variables: TemplateVariable[] = [
   { variable: 'simple' },
   { variable: 'withprocessing', preprocessing: ['upper'] },
   { variable: 'upper' },
+  { variable: 'name' },
 ];
 
 const data = new Map<string, string>();
@@ -45,4 +46,10 @@ test('malformed variables', () => {
   const source = `%simple  %  % simple`;
 
   expect(replaceVariables(source, variables, data)).toStrictEqual(source);
+});
+
+test('undefined variable', () => {
+  const source = `Hello %name%`;
+
+  expect(replaceVariables(source, variables, data)).toStrictEqual('Hello ');
 });
