@@ -102,3 +102,10 @@ export interface TemplateVariable {
 export type VariableOperation = 'upper' | 'lower' | 'trim' | 'unaccent' | 'camelCase' | 'capitalCase'
   | 'constantCase' | 'dotCase' | 'kebabCase' | 'noCase' | 'pascalCase' | 'pascalSnakeCase' | 'pathCase'
   | 'sentenceCase' | 'snakeCase' | 'trainCase' | 'initials' | 'plural' | 'singular';
+
+export interface TemplateVariableReplacement extends TemplateVariable {
+  /**
+   * The search string that will be replaced into the variable
+   */
+  needle: string;
+}

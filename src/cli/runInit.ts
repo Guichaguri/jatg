@@ -4,17 +4,18 @@ import chalk from 'chalk';
 import { capitalCase } from 'change-case';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
-import { loadConfig } from './loadConfig.js';
+import { loadConfig } from '../utils/loadConfig.js';
+import { showError } from '../utils/showError.js';
 import { TemplateConfiguration, TemplateModel } from '../models/template.model.js';
 import { JatgError } from '../models/jatg-error.js';
-import { showError } from './showError.js';
+import { convertTemplate } from './convertTemplate.js';
 
 const initialConfig: TemplateConfiguration & { $schema: string } = {
   $schema: 'https://unpkg.com/jatg/templates.schema.json',
   templates: [],
 };
 
-export async function initConfig(configPath: string, basePath: string, overwrite?: boolean, template?: string): Promise<void> {
+export async function runInit(configPath: string, basePath: string, overwrite?: boolean, template?: string): Promise<void> {
   console.log(chalk.magentaBright('jatg') + ' - create a new template wizard');
   console.log();
 
@@ -122,6 +123,31 @@ export async function initConfig(configPath: string, basePath: string, overwrite
     console.log();
     console.log(chalk.cyanBright('You can also change or extend these settings anytime by editting ') + chalk.cyan(relative('./', configFullPath)));
     console.log();
+
+    if (variable) {
+      console.log(chalk.yellow('Do you want to also generate the template files?'));
+      console.log(chalk.yellow('You only need to provide an existing path containing your files and a variable needle.'));
+      console.log(chalk.yellow('Those files will be converted into a template with the needle being replaced to', chalk.cyan(`%${ variable.toString().trim() }%`)));
+      console.log();
+
+      const { generateTemplateFiles } = await prompts({
+        name: 'generateTemplateFiles',
+        type: 'toggle',
+        message: 'Generate template files?',
+        initial: true,
+      }, {
+        onCancel: () => {
+          throw new JatgError('Operation canceled');
+        }
+      });
+
+      if (generateTemplateFiles) {
+        await convertTemplate([{ variable: variable.toString().trim() }], outputPath, false, spinner);
+
+        console.log();
+      }
+    }
+
     console.log(chalk.gray('Run this command again to generate another template'));
     console.log();
   } catch (error) {
