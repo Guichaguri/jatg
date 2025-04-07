@@ -1,5 +1,7 @@
 # jatg - just another template generator
 
+[![NPM](https://img.shields.io/npm/v/jatg)](https://www.npmjs.com/package/jatg)
+
 jatg is a low configuration tool to generate files based on templates.
 
 Most template generation tools require elaborate configurations, lack intuitive usage, are tied to a specific framework or do not support variable transformations.
@@ -33,7 +35,7 @@ You can create the file by running `npx jatg --init`, or just start by copying t
 }
 ```
 
-Read the [configuration reference](./docs/configuration.md) for a list of all possible properties.
+This should be enough for most use-cases, but you can read the [configuration reference](./docs/configuration.md) for a list of all possible properties.
 
 ### Create your template files
 
@@ -68,3 +70,10 @@ Pretty straightforward, isn't it?
 - [Configuration](./docs/configuration.md) (templates.json)
 - [Template Files](./docs/templates.md)
 - [Variables](./docs/variables.md)
+- [API](./docs/api.md)
+
+---
+
+## Samples
+
+Check the [samples](./samples) directory for config and template examples.
