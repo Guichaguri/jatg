@@ -51,5 +51,5 @@ export async function runConversion(
     }
   });
 
-  await convertTemplate(template.variables, outputPath, overwrite, spinner);
+  await convertTemplate(template.variables, outputPath, basePath, overwrite, spinner);
 }

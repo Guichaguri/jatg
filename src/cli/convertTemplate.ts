@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import prompts from 'prompts';
 import type { Ora } from 'ora';
 import { convertFileIntoTemplate } from '../utils/convertFileIntoTemplate.js';
@@ -7,6 +8,7 @@ import { TemplateVariable, TemplateVariableReplacement } from '../models/templat
 export async function convertTemplate(
   variables: TemplateVariable[],
   outputPath: string,
+  basePath: string,
   overwrite?: boolean,
   spinner?: Ora,
 ): Promise<void> {
@@ -52,5 +54,13 @@ export async function convertTemplate(
     })
   }
 
-  await convertFileIntoTemplate(sourceTemplatePath, outputPath, variableReplacements, overwrite, spinner);
+  console.log();
+
+  await convertFileIntoTemplate(
+    resolve(basePath, sourceTemplatePath),
+    resolve(basePath, outputPath),
+    variableReplacements,
+    overwrite,
+    spinner,
+  );
 }

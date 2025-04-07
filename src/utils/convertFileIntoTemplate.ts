@@ -1,6 +1,6 @@
 import { join, relative } from 'node:path';
 import { readFile } from 'node:fs/promises';
-import { Ora } from 'ora';
+import type { Ora } from 'ora';
 import { TemplateVariableReplacement, VariableOperation } from '../models/template.model.js';
 import { processVariableOperations } from './processVariableOperations.js';
 import { listAllFiles, saveFile } from './listAllFiles.js';
@@ -20,7 +20,7 @@ export async function convertFileIntoTemplate(
   output: string,
   variables: TemplateVariableReplacement[],
   overwrite: boolean = false,
-  ora?: Ora
+  ora?: Ora,
 ): Promise<void> {
   const replacements = variables
     .flatMap(item => createVariableReplacements(item.variable, item.needle, item.preprocessing));
@@ -44,7 +44,7 @@ export async function convertFileIntoTemplate(
 
       await saveFile(outputPath, content, overwrite);
 
-      ora?.succeed(outputPath);
+      ora?.succeed(relative(output, inputPath));
     } catch (error) {
       showError(error, ora);
     }

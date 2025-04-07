@@ -126,8 +126,8 @@ export async function runInit(configPath: string, basePath: string, overwrite?: 
 
     if (variable) {
       console.log(chalk.yellow('Do you want to also generate the template files?'));
-      console.log(chalk.yellow('You only need to provide an existing path containing your files and a variable needle.'));
-      console.log(chalk.yellow('Those files will be converted into a template with the needle being replaced to', chalk.cyan(`%${ variable.toString().trim() }%`)));
+      console.log(chalk.yellow('You only need to provide an existing path containing your files and a variable search string.'));
+      console.log(chalk.yellow('Those files will be converted into a template with the search string being replaced to', chalk.cyan(`%${ variable.toString().trim() }%`)));
       console.log();
 
       const { generateTemplateFiles } = await prompts({
@@ -142,7 +142,7 @@ export async function runInit(configPath: string, basePath: string, overwrite?: 
       });
 
       if (generateTemplateFiles) {
-        await convertTemplate([{ variable: variable.toString().trim() }], outputPath, false, spinner);
+        await convertTemplate([{ variable: variable.toString().trim() }], outputPath, basePath, false, spinner);
 
         console.log();
       }

@@ -7,7 +7,7 @@ import { listAllFiles } from './listAllFiles.js';
 export async function processTemplates(
   templates: TemplateModel[],
   variables: Map<string, string>,
-  overwrite: boolean,
+  overwrite: boolean = false,
   basePath: string = './',
   ora?: Ora,
 ): Promise<void> {
