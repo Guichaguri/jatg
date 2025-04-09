@@ -29,12 +29,12 @@ export async function convertFileIntoTemplate(
 
   for (const inputPath of files) {
     try {
-      let outputPath = join(output, relative(dirPath, inputPath));
+      let outputPath = relative(dirPath, inputPath);
+
+      outputPath = replaceTemplateVariables(outputPath, replacements);
 
       if (!outputPath.endsWith('.template'))
         outputPath += '.template';
-
-      outputPath = replaceTemplateVariables(outputPath, replacements);
 
       ora?.start(outputPath);
 
@@ -42,9 +42,9 @@ export async function convertFileIntoTemplate(
 
       content = replaceTemplateVariables(content, replacements);
 
-      await saveFile(outputPath, content, overwrite);
+      await saveFile(join(output, outputPath), content, overwrite);
 
-      ora?.succeed(relative(output, inputPath));
+      ora?.succeed(outputPath);
     } catch (error) {
       showError(error, ora);
     }
