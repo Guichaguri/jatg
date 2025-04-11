@@ -142,7 +142,7 @@ export async function runInit(configPath: string, basePath: string, overwrite?: 
       });
 
       if (generateTemplateFiles) {
-        await convertTemplate([{ variable: variable.toString().trim() }], outputPath, basePath, false, spinner);
+        await convertTemplate([{ variable: variable.toString().trim() }], sourcePath, basePath, false, spinner);
 
         console.log();
       }
