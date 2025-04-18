@@ -1,6 +1,6 @@
 # jatg - just another template generator
 
-[![NPM](https://img.shields.io/npm/v/jatg)](https://www.npmjs.com/package/jatg) [![codecov](https://codecov.io/github/Guichaguri/jatg/graph/badge.svg?token=2LFLM6SLKP)](https://codecov.io/github/Guichaguri/jatg)
+[![NPM](https://img.shields.io/npm/v/jatg)](https://www.npmjs.com/package/jatg) [![Coverage](https://img.shields.io/codecov/c/github/Guichaguri/jatg?token=2LFLM6SLKP)](https://codecov.io/github/Guichaguri/jatg)
 
 jatg is a low configuration tool to generate files based on templates.
 
