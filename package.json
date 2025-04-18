@@ -31,7 +31,8 @@
   "scripts": {
     "build": "tsc",
     "build:man": "help2man --no-info -o ./man/jatg.1 jatg",
-    "test": "vitest --coverage",
+    "test": "vitest",
+    "coverage": "vitest --coverage",
     "prepublishOnly": "npm run build",
     "cli": "tsx ./src/cli.ts",
     "sample:backend": "npm run cli -- --base-path ./samples/backend",
