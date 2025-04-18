@@ -37,7 +37,7 @@ describe('prompt', () => {
       return promptsResult;
     });
 
-    expect(prompt(questions)).rejects.toBeInstanceOf(JatgError);
+    await expect(prompt(questions)).rejects.toBeInstanceOf(JatgError);
     expect(promptMocked).toHaveBeenCalledWith(questions, expect.any(Object));
   });
 });
