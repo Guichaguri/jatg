@@ -1,9 +1,9 @@
 import { beforeEach, expect, test, vi } from 'vitest';
 import { readFile } from 'node:fs/promises';
+import { join, relative } from 'node:path';
 import { listAllFiles, saveFile } from '../../src/utils/listAllFiles.js';
 import { convertFileIntoTemplate } from '../../src/utils/convertFileIntoTemplate.js';
 import { TemplateVariableReplacement } from '../../src/models/template.model.js';
-import { join, relative } from 'node:path';
 
 vi.mock('node:fs/promises', () => ({
   readFile: vi.fn(),
@@ -12,6 +12,10 @@ vi.mock('node:fs/promises', () => ({
 vi.mock('../../src/utils/listAllFiles.js', () => ({
   listAllFiles: vi.fn(),
   saveFile: vi.fn(),
+}));
+
+vi.mock('../../src/utils/showError.js', () => ({
+  showError: vi.fn(),
 }));
 
 const readFileMock = vi.mocked(readFile);
