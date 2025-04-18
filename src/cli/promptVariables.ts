@@ -1,6 +1,5 @@
-import prompts from 'prompts';
+import { prompt } from '../utils/prompt.js';
 import { TemplateModel, TemplateVariable } from '../models/template.model.js';
-import { JatgError } from '../models/jatg-error.js';
 
 export async function promptVariables(templates: TemplateModel[]): Promise<Map<string, string>> {
   const values = new Map<string, string>();
@@ -37,7 +36,7 @@ async function promptVariable(variable: TemplateVariable): Promise<string> {
 
   const hasChoices = variable.choices && variable.choices.length > 0;
 
-  const { value } = await prompts({
+  const { value } = await prompt({
     name: 'value',
     message: variable.name || variable.variable,
     hint: variable.description,
@@ -48,8 +47,6 @@ async function promptVariable(variable: TemplateVariable): Promise<string> {
     })) : undefined,
     initial: validateValue(variable, variable.initial) === true ? variable.initial : undefined,
     validate: value => validateValue(variable, value),
-  }, {
-    onCancel: () => { throw new JatgError('Generation canceled'); }
   });
 
   return value;

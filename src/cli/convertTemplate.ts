@@ -1,8 +1,7 @@
 import { resolve } from 'node:path';
-import prompts from 'prompts';
 import type { Ora } from 'ora';
 import { convertFileIntoTemplate } from '../utils/convertFileIntoTemplate.js';
-import { JatgError } from '../models/jatg-error.js';
+import { prompt } from '../utils/prompt.js';
 import { TemplateVariable, TemplateVariableReplacement } from '../models/template.model.js';
 
 export async function convertTemplate(
@@ -16,37 +15,26 @@ export async function convertTemplate(
     return;
   }
 
-  const { sourceTemplatePath } = await prompts([
+  const { sourceTemplatePath } = await prompt([
     {
       name: 'sourceTemplatePath',
       type: 'text',
       message: 'What is the path where the files that will be converted are?',
+      validate: value => !value ? 'The path cannot be empty' : true,
     },
-  ], {
-    onCancel: () => {
-      throw new JatgError('Operation canceled');
-    }
-  });
-
-  if (!sourceTemplatePath) {
-    return;
-  }
+  ]);
 
   const variableReplacements: TemplateVariableReplacement[] = [];
 
   for (const item of variables) {
-    const { needle } = await prompts([
+    const { needle } = await prompt([
       {
         name: 'needle',
         type: 'text',
         message: 'What string will be replaced to %' + item.variable + '%?',
         initial: item.variable,
       }
-    ], {
-      onCancel: () => {
-        throw new JatgError('Operation canceled');
-      }
-    });
+    ]);
 
     variableReplacements.push({
       ...item,

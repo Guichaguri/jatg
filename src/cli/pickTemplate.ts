@@ -1,4 +1,4 @@
-import prompts from 'prompts';
+import { prompt } from '../utils/prompt.js';
 import { CompositeTemplateModel, TemplateModel } from '../models/template.model.js';
 import { JatgError } from '../models/jatg-error.js';
 
@@ -11,7 +11,7 @@ async function promptTemplate(templates: TemplateModel[], composites: CompositeT
   if (names.size === 0)
     throw new JatgError('No templates registered. Initialize one with "jatg --init"');
 
-  const { template } = await prompts({
+  const { template } = await prompt({
     name: 'template',
     message: 'Template',
     type: 'select',
@@ -19,8 +19,6 @@ async function promptTemplate(templates: TemplateModel[], composites: CompositeT
       value: name,
       title: name,
     })),
-  }, {
-    onCancel: () => { throw new JatgError('Generation canceled'); }
   });
 
   return template;

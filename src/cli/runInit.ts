@@ -1,4 +1,3 @@
-import prompts from 'prompts';
 import ora from 'ora';
 import chalk from 'chalk';
 import { capitalCase } from 'change-case';
@@ -6,34 +5,31 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
 import { loadConfig } from '../utils/loadConfig.js';
 import { showError } from '../utils/showError.js';
+import { prompt } from '../utils/prompt.js';
 import { TemplateConfiguration, TemplateModel } from '../models/template.model.js';
 import { JatgError } from '../models/jatg-error.js';
 import { convertTemplate } from './convertTemplate.js';
-
-const initialConfig: TemplateConfiguration & { $schema: string } = {
-  $schema: 'https://unpkg.com/jatg/templates.schema.json',
-  templates: [],
-};
 
 export async function runInit(configPath: string, basePath: string, overwrite?: boolean, template?: string): Promise<void> {
   console.log(chalk.magentaBright('jatg') + ' - create a new template wizard');
   console.log();
 
-  let config: TemplateConfiguration = { ...initialConfig };
+  let config: TemplateConfiguration & { $schema?: string } = {
+    $schema: 'https://unpkg.com/jatg/templates.schema.json',
+    templates: [],
+  };
 
   if (!overwrite)
     config = await loadConfig(basePath, configPath).catch(() => config);
 
   console.log(chalk.yellow('What name best describes the template?'));
 
-  const { name } = await prompts({
+  const { name } = await prompt({
     name: 'name',
     type: 'text',
     message: 'Template Name',
     initial: template || 'my-cool-template',
     validate: value => !value ? 'The name cannot be empty' : true,
-  }, {
-    onCancel: () => { throw new JatgError('Operation canceled'); }
   });
 
   if (config.templates.some(t => t.name === name))
@@ -46,40 +42,34 @@ export async function runInit(configPath: string, basePath: string, overwrite?: 
   console.log(chalk.yellow('What is the variable name that you want to use in your template files?'));
   console.log(chalk.yellow(`Leave empty if you don't want to define a variable.`));
 
-  const { variable } = await prompts({
+  const { variable } = await prompt({
     name: 'variable',
     type: 'text',
     message: 'Variable',
-  }, {
-    onCancel: () => { throw new JatgError('Operation canceled'); }
   });
 
   console.log();
   console.log(chalk.yellow('Choose a path where the template files will be located.'));
   console.log(chalk.yellow('This can be the path to a specific template file or to a directory containing template files.'));
 
-  const { sourcePath } = await prompts({
+  const { sourcePath } = await prompt({
     name: 'sourcePath',
     type: 'text',
     message: 'Template Path',
     initial: './templates',
     validate: value => !value ? 'The path cannot be empty' : true,
-  }, {
-    onCancel: () => { throw new JatgError('Operation canceled'); }
   });
 
   console.log();
   console.log(chalk.yellow('Now, choose a directory that the files should be generated into.'));
   console.log(chalk.yellow('This path can also contain variables.'));
 
-  const { outputPath } = await prompts({
+  const { outputPath } = await prompt({
     name: 'outputPath',
     type: 'text',
     message: 'Output Path',
     initial: './src',
     validate: value => !value ? 'The path cannot be empty' : true,
-  }, {
-    onCancel: () => { throw new JatgError('Operation canceled'); }
   });
 
   console.log();
@@ -130,15 +120,11 @@ export async function runInit(configPath: string, basePath: string, overwrite?: 
       console.log(chalk.yellow('Those files will be converted into a template with the search string being replaced to', chalk.cyan(`%${ variable.toString().trim() }%`)));
       console.log();
 
-      const { generateTemplateFiles } = await prompts({
+      const { generateTemplateFiles } = await prompt({
         name: 'generateTemplateFiles',
         type: 'toggle',
         message: 'Generate template files?',
         initial: true,
-      }, {
-        onCancel: () => {
-          throw new JatgError('Operation canceled');
-        }
       });
 
       if (generateTemplateFiles) {

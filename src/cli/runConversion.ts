@@ -1,8 +1,8 @@
 import { dirname, extname } from 'node:path';
 import chalk from 'chalk';
 import ora from 'ora';
-import prompts from 'prompts';
 import { loadConfig } from '../utils/loadConfig.js';
+import { prompt } from '../utils/prompt.js';
 import { JatgError } from '../models/jatg-error.js';
 import { convertTemplate } from './convertTemplate.js';
 import { pickTemplate } from './pickTemplate.js';
@@ -38,18 +38,14 @@ export async function runConversion(
   const outputPathSuggestions = template.sourcePaths
     .map(path => extname(path) ? dirname(path) : path);
 
-  const { outputPath } = await prompts([
+  const { outputPath } = await prompt([
     {
       name: 'outputPath',
       type: 'text',
       message: 'What is the output path where the template files will be generated?',
       initial: outputPathSuggestions.length > 0 ? outputPathSuggestions[0] : './templates',
     },
-  ], {
-    onCancel: () => {
-      throw new JatgError('Operation canceled');
-    }
-  });
+  ]);
 
   await convertTemplate(template.variables, outputPath, basePath, overwrite, spinner);
 }
